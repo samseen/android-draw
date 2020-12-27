@@ -79,5 +79,16 @@ public class PaintView extends View {
         canvas.restore();
     }
 
-    public void touchStart()
+    private void touchStart(float x, float y) {
+        mPath = new Path();
+
+        Draw draw = new Draw(currentColor, strokeWidth, mPath);
+        paths.add(draw);
+
+        mPath.reset();
+        mPath.moveTo(x, y);
+
+        mX = x;
+        mY = y;
+    }
 }
