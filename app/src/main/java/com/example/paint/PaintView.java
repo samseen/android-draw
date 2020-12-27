@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class PaintView extends View {
         canvas.restore();
     }
 
-    private void touchStart(float x, float y) {
+    private void touchStart (float x, float y) {
         mPath = new Path();
 
         Draw draw = new Draw(currentColor, strokeWidth, mPath);
@@ -91,4 +92,53 @@ public class PaintView extends View {
         mX = x;
         mY = y;
     }
+
+    private void touchMove (float x, float y) {
+        float dx = Math.abs(x - mX);
+        float dy = Math.abs(y - mY);
+
+        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
+            mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
+
+            mX = x;
+            mY = y;
+        }
+    }
+
+    private void touchUp () {
+        mPath.lineTo(mX, mY);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        float x = event.getX();
+        float y = event.getY();
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                touchStart(x, y);
+                invalidate();
+                break;
+
+            case MotionEvent.ACTION_UP:
+                touchUp();
+                invalidate();
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                touchMove(x, y);
+                invalidate();
+                break;
+        }
+        return true;
+    }
+
+    public void clear () {
+        backgroundColor = DEFAULT_BG_COLOR;
+        paths.clear();
+        invalidate();
+    }
+
+    
 }
