@@ -6,11 +6,18 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.ScaleAnimation;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PaintView extends View {
@@ -140,5 +147,62 @@ public class PaintView extends View {
         invalidate();
     }
 
-    
+    public void undo () {
+        if (paths.size() > 0) {
+            undo.add(paths.remove(paths.size() - 1));
+        } else {
+            Toast.makeText(getContext(), "Nothing to undo", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void redo () {
+        if (undo.size() > 0) {
+            paths.add(undo.remove(undo.size() - 1));
+        } else {
+            Toast.makeText(getContext(), "Nothing to redo", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void setStrokeWidth (int width) {
+        strokeWidth = width;
+    }
+
+    public void setColor (int color) {
+        currentColor = color;
+    }
+
+    public void saveImage () {
+        int count = 0;
+        File sdDirectory = Environment.getExternalStorageDirectory();
+        File subDirectory = new File(sdDirectory.toString() + "/Pictures/Paint");
+
+        if (subDirectory.exists()) {
+            File[] existing = subDirectory.listFiles();
+            for (File file : existing) {
+                if(file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
+                    count++;
+                }
+            }
+        } else {
+            subDirectory.mkdir();
+        }
+
+        if(subDirectory.exists()) {
+            File image = new File(subDirectory, "/drawing_" + (count + 1));
+            FileOutputStream fileOutputStream;
+
+            try {
+                fileOutputStream = new FileOutputStream(image);
+                mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                fileOutputStream.flush();
+                fileOutputStream.close();
+
+                Toast.makeText(getContext(), "saved", Toast.LENGTH_LONG).show();
+            } catch (FileNotFoundException e) {
+
+            } catch (IOException e) {
+
+            }
+        }
+    }
 }
