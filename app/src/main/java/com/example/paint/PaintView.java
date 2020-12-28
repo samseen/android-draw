@@ -73,10 +73,10 @@ public class PaintView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.save();
-        mCanvas.drawColor(DEFAULT_BG_COLOR);
+        mCanvas.drawColor(backgroundColor);
 
         for(Draw draw : paths) {
-            mPaint.setColor(DEFAULT_COLOR);
+            mPaint.setColor(draw.color);
             mPaint.setStrokeWidth(strokeWidth);
             mPaint.setMaskFilter(null);
 
@@ -150,6 +150,7 @@ public class PaintView extends View {
     public void undo () {
         if (paths.size() > 0) {
             undo.add(paths.remove(paths.size() - 1));
+            invalidate();
         } else {
             Toast.makeText(getContext(), "Nothing to undo", Toast.LENGTH_LONG).show();
         }
@@ -158,6 +159,7 @@ public class PaintView extends View {
     public void redo () {
         if (undo.size() > 0) {
             paths.add(undo.remove(undo.size() - 1));
+            invalidate();
         } else {
             Toast.makeText(getContext(), "Nothing to redo", Toast.LENGTH_LONG).show();
         }

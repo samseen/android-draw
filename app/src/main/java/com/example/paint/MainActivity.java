@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -12,17 +13,21 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import yuku.ambilwarna.AmbilWarnaDialog;
+
 public class MainActivity extends AppCompatActivity {
 
     private PaintView paintView;
     private int defaultColor;
     private int DEFAULT_PERMISSION_CODE = 1;
+    private static final int STORAGE_PERMISSION_CODE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,5 +118,49 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Access Denied", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.clear_button:
+                paintView.clear();
+                return true;
+
+            case R.id.undo_button:
+                paintView.undo();
+                return true;
+
+            case R.id.redo_button:
+                paintView.redo();
+                return true;
+
+            case R.id.save_button:
+                if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestStoragePermission();
+                }
+                paintView.saveImage();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void openColourPicker () {
+        AmbilWarnaDialog ambilWarnaDialog = new AmbilWarnaDialog(this, defaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+            @Override
+            public void onCancel(AmbilWarnaDialog dialog) {
+                Toast.makeText(MainActivity.this, "Unavailable", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onOk(AmbilWarnaDialog dialog, int color) {
+                defaultColor = color;
+
+                paintView.setColor(color);
+            }
+        });
+        ambilWarnaDialog.show();
     }
 }
