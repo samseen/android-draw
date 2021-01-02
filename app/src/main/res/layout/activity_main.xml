@@ -10,19 +10,39 @@
         android:id="@+id/change_color_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="390dp"
+        android:layout_marginTop="18dp"
         android:text="Change Color"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/seekBar"
-        app:layout_constraintTop_toBottomOf="@+id/paintView" />
+        app:layout_constraintTop_toTopOf="@+id/seekBar" />
+
+    <Button
+        android:id="@+id/buttonGetCurrentLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="257dp"
+        android:text="Get Current Location"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        app:layout_constraintEnd_toStartOf="@+id/textLatLong"
+        app:layout_constraintStart_toStartOf="@+id/textLatLong"
+        app:layout_constraintTop_toBottomOf="@+id/buttonGetCurrentLocation" />
 
     <SeekBar
         android:id="@+id/seekBar"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="1dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="14dp"
+        android:layout_marginBottom="6dp"
         app:layout_constraintBottom_toTopOf="@+id/current_pen_size"
         app:layout_constraintEnd_toStartOf="@+id/change_color_button"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,38 +52,53 @@
         android:id="@+id/current_pen_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="102dp"
-        android:layout_marginEnd="101dp"
-        android:layout_marginBottom="371dp"
+        android:layout_marginBottom="73dp"
         android:text="Pen Size:"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonGetCurrentLocation"
         app:layout_constraintEnd_toEndOf="@+id/seekBar"
-        app:layout_constraintStart_toStartOf="@+id/paintView"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+        app:layout_constraintStart_toStartOf="@+id/seekBar" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="43dp"
-        android:layout_marginBottom="14dp"
+        android:layout_marginBottom="7dp"
         android:text="@string/signature"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/paintView"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textLatLong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+
+    <TextView
+        android:id="@+id/textAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:textColor="@color/design_default_color_primary"
+        app:layout_constraintEnd_toStartOf="@+id/textLatLong"
+        app:layout_constraintStart_toStartOf="@+id/textLatLong"
+        app:layout_constraintTop_toBottomOf="@+id/textLatLong" />
 
     <com.example.paint.PaintView
         android:id="@+id/paintView"
-        android:background="@drawable/customborder"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="198dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="76dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="19dp"
-        app:layout_constraintBottom_toTopOf="@+id/change_color_button"
+        android:layout_marginBottom="79dp"
+        android:background="@drawable/customborder"
+        app:layout_constraintBottom_toBottomOf="@+id/current_pen_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
