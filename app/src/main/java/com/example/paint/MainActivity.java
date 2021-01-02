@@ -47,12 +47,6 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ResultReceiver resultReceiver;
 
-    resultReceiver = new AddressResultReceiver(new Handler());
-
-    textLatLong = findViewById(R.id.textLatLong);
-    progressBar = findViewById(R.id.progressBar);
-    textAddress = findViewById(R.id.textAddress);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -67,6 +61,12 @@ public class MainActivity extends AppCompatActivity {
         SeekBar seekBar = findViewById(R.id.seekBar);
         final TextView textView = findViewById(R.id.current_pen_size);
 
+        resultReceiver = new AddressResultReceiver(new Handler());
+
+        textLatLong = findViewById(R.id.textLatLong);
+        progressBar = findViewById(R.id.progressBar);
+        textAddress = findViewById(R.id.textAddress);
+
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
         paintView.initialise(displayMetrics);
@@ -79,6 +79,23 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 openColourPicker();
+            }
+        });
+
+        findViewById(R.id.buttonGetCurrentLocation).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(
+                        getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(
+                            MainActivity.this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            REQUEST_CODE_LOCATION_PERMISSION
+                    );
+                } else {
+                    getCurrentLocation();
+                }
             }
         });
 
@@ -99,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
 
     }
 
@@ -188,5 +204,83 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         ambilWarnaDialog.show();
+    }
+
+    private void getCurrentLocation() {
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(3000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        LocationServices.getFusedLocationProviderClient(MainActivity.this)
+                .requestLocationUpdates(locationRequest, new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        super.onLocationResult(locationResult);
+                        LocationServices.getFusedLocationProviderClient(MainActivity.this)
+                                .removeLocationUpdates(this);
+                        if (locationResult != null && locationResult.getLocations().size() > 0) {
+                            int latestLocationIndex = locationResult.getLocations().size() - 1;
+                            double latitude =
+                                    locationResult.getLocations().get(latestLocationIndex).getLatitude();
+                            double longitude =
+                                    locationResult.getLocations().get(latestLocationIndex).getLongitude();
+                            textLatLong.setText(
+                                    String.format(
+                                            "Latitude: %s\nLongitude: %s",
+                                            latitude,
+                                            longitude
+                                    )
+                            );
+
+                            Location location = new Location("providerNA");
+                            location.setLatitude(latitude);
+                            location.setLongitude(longitude);
+                            fetchAddressFromLatLong(location);
+                        } else {
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+                }, Looper.getMainLooper());
+
+    }
+
+    private void fetchAddressFromLatLong(Location location) {
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(Constants.RECEIVER, resultReceiver);
+        intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
+        startService(intent);
+    }
+
+    private class AddressResultReceiver extends ResultReceiver {
+
+        AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            super.onReceiveResult(resultCode, resultData);
+            if (resultCode == Constants.SUCCESS_RESULT) {
+                textAddress.setText(resultData.getString(Constants.RESULT_DATA_KEY));
+            } else {
+                Toast.makeText(MainActivity.this, resultData.getString(Constants.RESULT_DATA_KEY), Toast.LENGTH_SHORT).show();
+            }
+
+            progressBar.setVisibility(View.GONE);
+        }
     }
 }
