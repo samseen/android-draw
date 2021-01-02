@@ -10,15 +10,29 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Looper;
+
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
@@ -28,6 +42,16 @@ public class MainActivity extends AppCompatActivity {
     private int defaultColor;
     private int DEFAULT_PERMISSION_CODE = 1;
     private static final int STORAGE_PERMISSION_CODE = 123;
+    private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
+    private TextView textLatLong, textAddress;
+    private ProgressBar progressBar;
+    private ResultReceiver resultReceiver;
+
+    resultReceiver = new AddressResultReceiver(new Handler());
+
+    textLatLong = findViewById(R.id.textLatLong);
+    progressBar = findViewById(R.id.progressBar);
+    textAddress = findViewById(R.id.textAddress);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     @Override
