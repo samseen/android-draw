@@ -6,41 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.example.paint.PaintView
-        android:id="@+id/paintView"
-        android:layout_width="0dp"
-        android:layout_height="650dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/change_color_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="315dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="390dp"
         android:text="Change Color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/seekBar"
         app:layout_constraintTop_toBottomOf="@+id/paintView" />
 
     <SeekBar
         android:id="@+id/seekBar"
         android:layout_width="0dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="0dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="14dp"
+        app:layout_constraintBottom_toTopOf="@+id/current_pen_size"
         app:layout_constraintEnd_toStartOf="@+id/change_color_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/paintView" />
@@ -49,11 +32,39 @@
         android:id="@+id/current_pen_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="102dp"
+        android:layout_marginEnd="101dp"
+        android:layout_marginBottom="371dp"
         android:text="Pen Size:"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/change_color_button"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/seekBar"
+        app:layout_constraintStart_toStartOf="@+id/paintView"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="43dp"
+        android:layout_marginBottom="14dp"
+        android:text="@string/signature"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/paintView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.example.paint.PaintView
+        android:id="@+id/paintView"
+        android:background="@drawable/customborder"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="19dp"
+        app:layout_constraintBottom_toTopOf="@+id/change_color_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
