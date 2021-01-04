@@ -10,42 +10,46 @@
         android:id="@+id/change_color_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:text="Change Color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/seekBar"
-        app:layout_constraintTop_toTopOf="@+id/seekBar" />
+        app:layout_constraintTop_toBottomOf="@+id/paintView" />
 
     <Button
         android:id="@+id/buttonGetCurrentLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="257dp"
-        android:text="Get Current Location"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="32dp"
+        android:text="@string/get_current_location"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="11dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="8dp"
         android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/textLatLong"
-        app:layout_constraintStart_toStartOf="@+id/textLatLong"
-        app:layout_constraintTop_toBottomOf="@+id/buttonGetCurrentLocation" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/current_pen_size" />
 
     <SeekBar
         android:id="@+id/seekBar"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="6dp"
-        app:layout_constraintBottom_toTopOf="@+id/current_pen_size"
-        app:layout_constraintEnd_toStartOf="@+id/change_color_button"
+        android:layout_width="200dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.07"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/paintView" />
 
@@ -53,58 +57,59 @@
         android:id="@+id/current_pen_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="73dp"
+        android:layout_marginTop="12dp"
         android:text="Pen Size:"
-        app:layout_constraintBottom_toTopOf="@+id/buttonGetCurrentLocation"
-        app:layout_constraintEnd_toEndOf="@+id/seekBar"
-        app:layout_constraintStart_toStartOf="@+id/seekBar" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.234"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
 
     <TextView
         android:id="@+id/Signature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="7dp"
+        android:layout_marginTop="8dp"
         android:text="@string/signature"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/paintView"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textLatLong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="24dp"
         android:textColor="@android:color/black"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonGetCurrentLocation" />
 
     <TextView
         android:id="@+id/textAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
+        android:layout_marginTop="24dp"
         android:textColor="@color/design_default_color_primary"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/textLatLong"
-        app:layout_constraintStart_toStartOf="@+id/textLatLong"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textLatLong" />
 
     <com.example.paint.PaintView
         android:id="@+id/paintView"
         android:layout_width="0dp"
         android:layout_height="198dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="76dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="79dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/customborder"
-        app:layout_constraintBottom_toBottomOf="@+id/current_pen_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/Signature" />
 </androidx.constraintlayout.widget.ConstraintLayout>

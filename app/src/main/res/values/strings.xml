@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Paint</string>
     <string name="signature">Signature</string>
+    <string name="get_current_location">Get Current Location</string>
 </resources>
