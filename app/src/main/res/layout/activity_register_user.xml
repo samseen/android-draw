@@ -52,7 +52,7 @@
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Local Government"
-        android:inputType="number"
+        android:inputType="text"
         android:textSize="24sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
