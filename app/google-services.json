@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "638403798053",
+    "project_id": "paint-24f61",
+    "storage_bucket": "paint-24f61.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:638403798053:android:bb2f22858698d30db78bcc",
+        "android_client_info": {
+          "package_name": "com.example.paint"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "638403798053-e9imhprvmak60g5e3a5pqvmc02n3ad32.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDteIRscZPOjUxvpphditsPHt3cuYJGrfY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "638403798053-e9imhprvmak60g5e3a5pqvmc02n3ad32.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
