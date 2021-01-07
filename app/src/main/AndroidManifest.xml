@@ -12,7 +12,8 @@
         android:theme="@style/Theme.Paint"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".Login"></activity>
+        <activity android:name=".RegisterUser"></activity>
+        <activity android:name=".Login" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,8 +24,8 @@
 
         <service android:name=".FetchAddressIntentService" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>
