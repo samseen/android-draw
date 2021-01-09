@@ -212,6 +212,7 @@ public class PaintView extends View {
 
     }
 
+    /*Images aren't getting saved*/
     public void saveImage () {
 
         int count = 0;
