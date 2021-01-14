@@ -1,24 +1,45 @@
 package com.example.paint;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.ScaleAnimation;
+import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 public class PaintView extends View {
 
@@ -39,6 +60,14 @@ public class PaintView extends View {
 
     private ArrayList<Draw> paths = new ArrayList<>();
     private ArrayList<Draw> undo = new ArrayList<>();
+
+    private Uri imageFileName;
+
+    private DatabaseReference root = FirebaseDatabase.getInstance()
+            .getReference("Image");
+    private StorageReference reference = FirebaseStorage.getInstance()
+            .getReference();
+    private Uri imageUri;
 
     public PaintView(Context context) {
 
@@ -243,16 +272,26 @@ public class PaintView extends View {
         if (subDirectory.exists()) {
 
             File image = new File(subDirectory, "/drawing_" + (count + 1) + ".png");
+            //Set the file name here - get the file name from the image
+            //Uri imageFile = getImageContentUri(this.getContext(), image);
+            //Uri imageFile = Uri.fromFile(image);
+
+            //setImageFileName(imageFile);
+
             FileOutputStream fileOutputStream;
 
             try {
 
                 fileOutputStream = new FileOutputStream(image);
 
-                mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                Boolean bool = mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
 
                 fileOutputStream.flush();
                 fileOutputStream.close();
+
+                setImageFileName(Uri.fromFile(image));
+
+                uploadToFirebase(getImageFileName());
 
                 Toast.makeText(getContext(), "saved", Toast.LENGTH_LONG).show();
 
@@ -268,4 +307,76 @@ public class PaintView extends View {
 
     }
 
+    public void setImageFileName(Uri imageFileName) {
+        this.imageFileName = imageFileName;
+    }
+
+    public Uri getImageFileName() {
+        return this.imageFileName;
+    }
+
+    private void uploadToFirebase(Uri uri) {
+        StorageReference fileRef = reference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
+        fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+
+//                        Model model = new Model(uri.toString());
+//                        String modelId = root.push().getKey();
+//                        root.child(modelId).setValue(model);
+                        //progressBar.setVisibility(View.INVISIBLE);
+
+                        Toast.makeText(getContext(), "Uploaded Successfully!", Toast.LENGTH_SHORT).show();
+
+                        //imageView.setImageResource(R.drawable.ic_baseline_add_photo_alternate_24);
+                    }
+                });
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                //progressBar.setVisibility(View.VISIBLE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //progressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(getContext(), "Uploading Failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private String getFileExtension(Uri mUri) {
+        Context applicationContext = MainActivity.getContextOfApplication();
+        //applicationContext.getContentResolver();
+        ContentResolver cr = applicationContext.getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cr.getType(mUri));
+    }
+
+    public static Uri getImageContentUri(Context context, File imageFile) {
+        String filePath = imageFile.getAbsolutePath();
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[] { MediaStore.Images.Media._ID },
+                MediaStore.Images.Media.DATA + "=? ",
+                new String[] { filePath }, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+            cursor.close();
+            return Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "" + id);
+        } else {
+            if (imageFile.exists()) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.DATA, filePath);
+                return context.getContentResolver().insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            } else {
+                return null;
+            }
+        }
+    }
 }

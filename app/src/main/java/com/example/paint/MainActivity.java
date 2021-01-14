@@ -7,8 +7,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -17,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -33,6 +36,12 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
@@ -46,6 +55,19 @@ public class MainActivity extends AppCompatActivity {
     private TextView textLatLong, textAddress;
     private ProgressBar progressBar;
     private ResultReceiver resultReceiver;
+
+    private DatabaseReference root = FirebaseDatabase.getInstance()
+            .getReference("Image");
+    private StorageReference reference = FirebaseStorage.getInstance()
+            .getReference();
+
+    private Uri imageUri;
+
+    public static Context contextOfApplication;
+    public static Context getContextOfApplication()
+    {
+        return contextOfApplication;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        contextOfApplication = getApplicationContext();
     }
 
     @Override
@@ -282,5 +305,11 @@ public class MainActivity extends AppCompatActivity {
 
             progressBar.setVisibility(View.GONE);
         }
+    }
+
+    private String getFileExtension(Uri mUri) {
+        ContentResolver cr = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cr.getType(mUri));
     }
 }
