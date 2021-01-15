@@ -32,6 +32,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -241,7 +242,7 @@ public class PaintView extends View {
 
     }
 
-    /*Images aren't getting saved*/
+
     public void saveImage () {
 
         int count = 0;
@@ -272,11 +273,6 @@ public class PaintView extends View {
         if (subDirectory.exists()) {
 
             File image = new File(subDirectory, "/drawing_" + (count + 1) + ".png");
-            //Set the file name here - get the file name from the image
-            //Uri imageFile = getImageContentUri(this.getContext(), image);
-            //Uri imageFile = Uri.fromFile(image);
-
-            //setImageFileName(imageFile);
 
             FileOutputStream fileOutputStream;
 
@@ -284,16 +280,46 @@ public class PaintView extends View {
 
                 fileOutputStream = new FileOutputStream(image);
 
+                Uri file = Uri.fromFile(image);
+//                StorageReference fileRef = reference.child(System.currentTimeMillis() + "." + getFileExtension(file));
+                StorageReference fileRef = reference.child(System.currentTimeMillis() + ".png");
+
+                fileRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Toast.makeText(getContext(), "Uploaded Successfully!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "Uploading Failed!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
                 Boolean bool = mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                // Convert to JPG
+                // Trim image to correct height
+                // Convert JPG to bin or base64
+                // Save JPG as a blob object
+
+                //UploadTask uploadTask = reference.putBytes(data);
 
                 fileOutputStream.flush();
                 fileOutputStream.close();
 
-                setImageFileName(Uri.fromFile(image));
+                //setImageFileName(Uri.fromFile(image));
 
-                uploadToFirebase(getImageFileName());
+                // Create a reference to 'images/mountains.jpg'
+                //StorageReference mountainImagesRef = reference.child(getImageFileName().toString());
 
-                Toast.makeText(getContext(), "saved", Toast.LENGTH_LONG).show();
+                //uploadToFirebase();
+
+                Toast.makeText(getContext(), "saved locally", Toast.LENGTH_LONG).show();
 
             } catch (FileNotFoundException e) {
 
@@ -315,46 +341,33 @@ public class PaintView extends View {
         return this.imageFileName;
     }
 
-    private void uploadToFirebase(Uri uri) {
-        StorageReference fileRef = reference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
-        fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-
-//                        Model model = new Model(uri.toString());
-//                        String modelId = root.push().getKey();
-//                        root.child(modelId).setValue(model);
-                        //progressBar.setVisibility(View.INVISIBLE);
-
-                        Toast.makeText(getContext(), "Uploaded Successfully!", Toast.LENGTH_SHORT).show();
-
-                        //imageView.setImageResource(R.drawable.ic_baseline_add_photo_alternate_24);
-                    }
-                });
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                //progressBar.setVisibility(View.VISIBLE);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                //progressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(getContext(), "Uploading Failed!", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+//    private void uploadToFirebase(Uri uri) {
+//        Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
+//        StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
+//        uploadTask = riversRef.putFile(file);
+//
+//        // Register observers to listen for when the download is done or if it fails
+//        uploadTask.addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception exception) {
+//                // Handle unsuccessful uploads
+//            }
+//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+//                // ...
+//            }
+//        });
+//    }
 
     private String getFileExtension(Uri mUri) {
         Context applicationContext = MainActivity.getContextOfApplication();
         //applicationContext.getContentResolver();
         ContentResolver cr = applicationContext.getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cr.getType(mUri));
+        String returnMime = mime.getExtensionFromMimeType(cr.getType(mUri));
+        return returnMime;
     }
 
     public static Uri getImageContentUri(Context context, File imageFile) {
