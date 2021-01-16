@@ -280,6 +280,8 @@ public class PaintView extends View {
 
                 fileOutputStream = new FileOutputStream(image);
 
+
+                //The code below still doesn't save the image online in firebase.
                 Uri file = Uri.fromFile(image);
 //                StorageReference fileRef = reference.child(System.currentTimeMillis() + "." + getFileExtension(file));
                 StorageReference fileRef = reference.child(System.currentTimeMillis() + ".png");
