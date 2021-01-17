@@ -292,6 +292,10 @@ public class PaintView extends View {
                         fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
+                                Model model = new Model(uri.toString());
+                                String modelId = root.push().getKey();
+                                root.child(modelId).setValue(model);
+                                
                                 Toast.makeText(getContext(), "Uploaded Successfully!", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -324,7 +328,7 @@ public class PaintView extends View {
                 Toast.makeText(getContext(), "saved locally", Toast.LENGTH_LONG).show();
 
             } catch (FileNotFoundException e) {
-
+                Log.e("Storage", "Error uploading image", e);
 
             } catch (IOException e) {
 
