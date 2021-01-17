@@ -94,7 +94,10 @@ public class PaintView extends View {
 
     public void initialise (DisplayMetrics displayMetrics) {
 
-        int height = displayMetrics.heightPixels;
+//        int height = displayMetrics.heightPixels;
+        final float scale = getContext().getResources().getDisplayMetrics().density;
+
+        int height = (int) (198 * scale + 0.5f);
         int width = displayMetrics.widthPixels;
 
         mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -295,7 +298,7 @@ public class PaintView extends View {
                                 Model model = new Model(uri.toString());
                                 String modelId = root.push().getKey();
                                 root.child(modelId).setValue(model);
-                                
+
                                 Toast.makeText(getContext(), "Uploaded Successfully!", Toast.LENGTH_SHORT).show();
                             }
                         });
