@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private Uri imageUri;
 
     private LatLong latLong;
+    private LatLongAddress latLongAddress;
 
     public static Context contextOfApplication;
     public static Context getContextOfApplication()
@@ -207,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
                 if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestStoragePermission();
                 }
+                //paintView.saveImage(latLong, latLongAddress);
                 paintView.saveImage(latLong);
                 return true;
         }
@@ -303,7 +305,10 @@ public class MainActivity extends AppCompatActivity {
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             super.onReceiveResult(resultCode, resultData);
             if (resultCode == Constants.SUCCESS_RESULT) {
-                textAddress.setText(resultData.getString(Constants.RESULT_DATA_KEY));
+                String addressDetails = resultData.getString(Constants.RESULT_DATA_KEY);
+                textAddress.setText(addressDetails);
+                //latLongAddress.setAddress(addressDetails);
+
             } else {
                 Toast.makeText(MainActivity.this, resultData.getString(Constants.RESULT_DATA_KEY), Toast.LENGTH_SHORT).show();
             }

@@ -246,6 +246,7 @@ public class PaintView extends View {
     }
 
 
+//    public void saveImage (LatLong latLong, LatLongAddress address) {
     public void saveImage (LatLong latLong) {
 
         int count = 0;
@@ -302,7 +303,9 @@ public class PaintView extends View {
 
                                 String myLatitude = convertLatLong(latLong.getLatitude());
                                 String myLongitude = convertLatLong(latLong.getLongitude());
+                                //String myAddress = address.getAddress();
 
+//                                Model model = new Model(uri.toString(), myLatitude, myLongitude, myAddress);
                                 Model model = new Model(uri.toString(), myLatitude, myLongitude);
                                 String modelId = root.push().getKey();
                                 root.child(modelId).setValue(model);
