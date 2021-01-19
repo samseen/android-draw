@@ -267,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
                                             latitude,
                                             longitude
                                     )
+
                             );
 
                             Location location = new Location("providerNA");

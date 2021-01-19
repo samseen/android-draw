@@ -295,6 +295,11 @@ public class PaintView extends View {
                         fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
+
+                                //get latLongText
+                                //get textAddress
+                                //pass it to constructor
+
                                 Model model = new Model(uri.toString());
                                 String modelId = root.push().getKey();
                                 root.child(modelId).setValue(model);
