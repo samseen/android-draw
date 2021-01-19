@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Uri imageUri;
 
+    private LatLong latLong;
+
     public static Context contextOfApplication;
     public static Context getContextOfApplication()
     {
@@ -205,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                 if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestStoragePermission();
                 }
-                paintView.saveImage();
+                paintView.saveImage(latLong);
                 return true;
         }
 
@@ -269,6 +271,8 @@ public class MainActivity extends AppCompatActivity {
                                     )
 
                             );
+
+                            latLong = new LatLong(latitude, longitude);
 
                             Location location = new Location("providerNA");
                             location.setLatitude(latitude);
